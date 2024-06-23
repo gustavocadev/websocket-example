@@ -1,7 +1,16 @@
-import { Elysia } from "elysia";
+import { Elysia } from 'elysia';
 
-const app = new Elysia().get("/", () => "Hello Elysia").listen(3000);
+const port = Bun.env.PORT || 8080;
 
-console.log(
-  `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`
-);
+new Elysia()
+  .ws('/ws', {
+    open: (ws) => {
+      console.log('Client connected');
+    },
+
+    message: (ws, data) => {
+      console.log(data);
+      // ws.send('Hello from server!');
+    },
+  })
+  .listen(port);
